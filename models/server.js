@@ -5,8 +5,8 @@ class Server {
 
 	constructor() {
 		this.app = express();
-		this.port = process.env.PORT;
-		this.userPath = process.env.API_USERS;
+		this.port = process.env.PORT || 3000;
+		this.userPath = process.env.API_USERS || '/api/users';
 
 		this.middlewares();
 		this.routes();
