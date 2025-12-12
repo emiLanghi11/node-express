@@ -1,44 +1,39 @@
 const express = require('express');
 const cors = require('cors');
 
-
 class Server {
 
-    constructor() {
-        this.app = express();
-        this.port = process.env.PORT;
+	constructor() {
+		this.app = express();
+		this.port = process.env.PORT;
+		this.userPath = process.env.API_USERS;
 
-        this.usuariosPath = '/api/usuarios'
+		this.middlewares();
+		this.routes();
+	}
 
-        // Middlewares
-        this.middlewares();
+	middlewares() {
+		// public directory
+		this.app.use(express.static('public'));
+		// CORS
+		this.app.use(cors({
+			origin: 'http://localhost:3000',
+			methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+			allowedHeaders: ['Content-Type', 'Authorization'],
+		}));
+		// Parse and read body
+		this.app.use(express.json());
+	}
 
-        // Rutas de mi app
-        this.routes();
-    }
+	routes() {
+		this.app.use(this.userPath, require('../routes/user.route'));
+	};
 
-    middlewares(){
-        // CORS
-        this.app.use(cors());
-
-        // Lectura y parseo
-        this.app.use(express.json());
-
-        // Directorio publico
-        this.app.use(express.static('public'));
-
-    }
-
-    routes() {
-        this.app.use(this.usuariosPath, require('../routes/usuarios'));
-    }
-
-    listen() {
-        this.app.listen(this.port, () => {
-            console.log('Servidor corriendo en puerto:', this.port);
-        })
-    }
+	listen() {
+		this.app.listen(this.port, () => {
+			console.log(`Server is running on port ${this.port}`);
+		});
+	}
 }
-
 
 module.exports = Server;
