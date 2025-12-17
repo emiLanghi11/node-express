@@ -1,16 +1,25 @@
 const express = require('express');
 const cors = require('cors');
+const { dbConnection } = require('../database/config');
+const { validateRequestErrors } = require('../middlewares/request.validation');
+
+
 
 class Server {
 
 	constructor() {
 		this.app = express();
-		this.port = process.env.PORT || 3000;
-		this.userPath = process.env.API_USERS || '/api/users';
+		this.port = process.env.PORT;
+		this.userPath = process.env.API_USERS;
 
+		this.databaseConnection();
 		this.middlewares();
 		this.routes();
 	}
+
+	async databaseConnection() {
+		await dbConnection();
+	};
 
 	middlewares() {
 		// public directory
@@ -23,6 +32,8 @@ class Server {
 		}));
 		// Parse and read body
 		this.app.use(express.json());
+		// Validate request errors
+		this.app.use(validateRequestErrors);
 	}
 
 	routes() {
