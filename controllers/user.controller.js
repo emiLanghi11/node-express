@@ -1,10 +1,9 @@
 const User = require('../models/user.model');
 const bcryptjs = require('bcryptjs');
-const { emailExists, userExists, roleExists } = require('../helpers/db.validation');
+const { emailAlreadyExists, userExists, roleExists } = require('../helpers/db.validation');
 
 
 const getUsers = async (req, res) => {
-
 	try {
 		const { limit = 5, from = 0 } = req.query;
 		const filter = { active: true };
@@ -16,16 +15,19 @@ const getUsers = async (req, res) => {
 			User.countDocuments(filter)
 		]);
 
+		const authenticatedUser = req.user;
+
 		res.status(200).json({
 			users,
+			authenticatedUser,
 			total
 		});
 	} catch (error) {
-		res.status(500).json({
+		console.log('error getting users', error);
+		return res.status(500).json({
 			message: 'Error getting users',
 			error: error.message
 		});
-		console.log('error getting users', error);
 	}
 	
 };
@@ -45,7 +47,7 @@ const putUsers = async (req, res) => {
 		}
 
 		if (email) {
-			await emailExists(email);
+			await emailAlreadyExists(email);
 			user.email = email;
 		}
 
@@ -64,11 +66,11 @@ const putUsers = async (req, res) => {
 		});
 		console.log('user updated successfully', id);
 	} catch (error) {
-		res.status(500).json({
+		console.log('error updating user', error);
+		return res.status(500).json({
 			message: 'Error updating user',
 			error: error.message
 		});
-		console.log('error updating user', error);
 	}
 };
 
@@ -91,11 +93,11 @@ const postUsers = async (req, res) => {
 		});
 		console.log('user created successfully', user._id.toString());
 	} catch (error) {
-		res.status(500).json({
+		console.log('error creating user', error);
+		return res.status(500).json({
 			message: 'Error creating user',
 			error: error.message
 		});
-		console.log('error creating user', error);
 	}
 	
 };
@@ -116,11 +118,11 @@ const deleteUsers = async (req, res) => {
 		});
 		console.log('user deleted successfully', id);
 	} catch (error) {
-		res.status(500).json({
+		console.log('error deleting user', error);
+		return res.status(500).json({
 			message: 'Error deleting user',
 			error: error.message
 		});
-		console.log('error deleting user', error);
 	}
 };
 

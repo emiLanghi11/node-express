@@ -1,14 +1,15 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 const { getUsers, putUsers, postUsers, deleteUsers, patchUsers } = require('../controllers/user.controller');
-const { validateRequestErrors } = require('../middlewares/request.validation');
+const { validateRequestErrors, validateJWTToken, validateRoles } = require('../middlewares');
 const { roleExists } = require('../helpers/db.validation');
-const { userExists } = require('../helpers/db.validation');
-
 const router = Router();
 
 
-router.get('/', getUsers);
+router.get('/', [
+	validateJWTToken,
+	validateRoles(['ADMIN', 'ADMINISTRATIVE', 'SALESPERSON'])
+], getUsers);
 
 router.put('/:id', [
 	check('id', 'Invalid ID').isMongoId(),

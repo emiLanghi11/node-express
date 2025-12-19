@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const { dbConnection } = require('../database/config');
-const { validateRequestErrors } = require('../middlewares/request.validation');
+const { validateRequestErrors } = require('../middlewares/request.middleware');
+
 
 
 
@@ -9,8 +10,10 @@ class Server {
 
 	constructor() {
 		this.app = express();
-		this.port = process.env.PORT;
+
+		this.port = process.env.PORT || 8080;
 		this.userPath = process.env.API_USERS;
+		this.authPath = process.env.API_AUTH;
 
 		this.databaseConnection();
 		this.middlewares();
@@ -25,8 +28,12 @@ class Server {
 		// public directory
 		this.app.use(express.static('public'));
 		// CORS
+		const allowedOrigins = process.env.CORS_ORIGINS
+      ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
+      : [];
+
 		this.app.use(cors({
-			origin: 'http://localhost:3000',
+			origin: allowedOrigins,
 			methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
 			allowedHeaders: ['Content-Type', 'Authorization'],
 		}));
@@ -38,6 +45,7 @@ class Server {
 
 	routes() {
 		this.app.use(this.userPath, require('../routes/user.route'));
+		this.app.use(this.authPath, require('../routes/auth.route'));
 	};
 
 	listen() {
