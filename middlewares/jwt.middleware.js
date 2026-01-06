@@ -11,9 +11,9 @@ const validateJWTToken = async (req, res, next) => {
 
 	try {
 		const decoded = await validateJWT(token.split(' ')[1]);
-		req.uid = decoded.uid;
+		req.id = decoded.id;
 
-		const user = await User.findById(decoded.uid);
+		const user = await User.findById(decoded.id);
 		if (!user) {
 			return res.status(401).json({
 				message: 'User not found'

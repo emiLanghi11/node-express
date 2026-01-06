@@ -31,7 +31,7 @@ const login = async (req, res) => {
 			});
 		}
 
-		const token = await generateJWT(user.uid);
+		const token = await generateJWT(user.id);
 
 		return res.status(200).json({
 			user,
@@ -65,7 +65,7 @@ const googleSignIn = async (req, res) => {
 			});
 		}
 
-		const token = await generateJWT(user.uid);
+		const token = await generateJWT(user.id);
 
 		return res.status(200).json({
 			user,

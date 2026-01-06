@@ -2,8 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { dbConnection } = require('../database/config');
 const { validateRequestErrors } = require('../middlewares/request.middleware');
-
-
+const { userRoute, authRoute, categoryRoute, productRoute, searchRoute } = require('../routes');
 
 
 class Server {
@@ -12,8 +11,13 @@ class Server {
 		this.app = express();
 
 		this.port = process.env.PORT || 8080;
-		this.userPath = process.env.API_USERS;
-		this.authPath = process.env.API_AUTH;
+		this.paths = {
+			user: process.env.API_USERS,
+			auth: process.env.API_AUTH,
+			category: process.env.API_CATEGORIES,
+			product: process.env.API_PRODUCTS,
+			search: process.env.API_SEARCH,
+		}
 
 		this.databaseConnection();
 		this.middlewares();
@@ -44,8 +48,11 @@ class Server {
 	}
 
 	routes() {
-		this.app.use(this.userPath, require('../routes/user.route'));
-		this.app.use(this.authPath, require('../routes/auth.route'));
+		this.app.use(this.paths.user, userRoute);
+		this.app.use(this.paths.auth, authRoute);
+		this.app.use(this.paths.category, categoryRoute);
+		this.app.use(this.paths.product, productRoute);
+		this.app.use(this.paths.search, searchRoute);
 	};
 
 	listen() {

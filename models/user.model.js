@@ -48,7 +48,7 @@ const userSchema = new Schema({
 // Remove password and version from the response
 userSchema.methods.toJSON = function() {
 	const { __v, password, _id, ...user } = this.toObject();
-	user.uid = this._id;
+	user.id = this._id;
 	return user;
 }
 

@@ -1,6 +1,6 @@
 const User = require('../models/user.model');
 const bcryptjs = require('bcryptjs');
-const { emailAlreadyExists, userExists, roleExists } = require('../helpers/db.validation');
+const { emailAlreadyExists, roleExists } = require('../helpers/db.validation');
 
 
 const getUsers = async (req, res) => {
@@ -15,11 +15,8 @@ const getUsers = async (req, res) => {
 			User.countDocuments(filter)
 		]);
 
-		const authenticatedUser = req.user;
-
 		res.status(200).json({
 			users,
-			authenticatedUser,
 			total
 		});
 	} catch (error) {
@@ -38,7 +35,7 @@ const putUsers = async (req, res) => {
 
 		const { password, email, role } = req.body;
 
-		const user = await userExists(id);
+		const user = await User.findById(id);
 
 		if (password) {
 			const salt = bcryptjs.genSaltSync(10);
@@ -78,7 +75,7 @@ const postUsers = async (req, res) => {
 	try {
 		const { name, email, role, password } = req.body;
 
-		await emailExists(email);
+		await emailAlreadyExists(email);
 
 		const salt = bcryptjs.genSaltSync(10);
 		const hash = bcryptjs.hashSync(password, salt);
@@ -106,7 +103,7 @@ const deleteUsers = async (req, res) => {
 	try {
 		const id = req.params.id;
 
-		const user = await userExists(id);
+		const user = await User.findById(id);
 
 		user.active = false;
 		user.deletedAt = Date.now();
@@ -126,16 +123,10 @@ const deleteUsers = async (req, res) => {
 	}
 };
 
-const patchUsers = (req, res) => {
-	res.json({
-		message: 'PATCH users API'
-	});
-};
 
 module.exports = {
 	getUsers,
 	putUsers,
 	postUsers,
 	deleteUsers,
-	patchUsers
 };
