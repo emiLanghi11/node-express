@@ -18,6 +18,7 @@ const userSchema = new Schema({
 	},
 	img: {
 		type: String,
+		default: null,
 	},
 	role: {
 		type: String,

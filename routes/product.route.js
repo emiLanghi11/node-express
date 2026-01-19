@@ -3,6 +3,7 @@ const { getProducts, createProduct, updateProduct, getProductById, deleteProduct
 const { validateJWTToken, validateRoles, validateRequestErrors } = require('../middlewares');
 const { productExists, categoryExists } = require('../helpers/db.validation');
 const { check } = require('express-validator');
+const { VALID_ROLES } = require('../constants/constants');
 
 const router = Router();
 
@@ -19,7 +20,7 @@ router.get('/:id', [
 router.post('/',
 	[
 		validateJWTToken,
-		validateRoles(['ADMIN']),
+		validateRoles([VALID_ROLES.ADMIN]),
 		check('name', 'Name is required').not().isEmpty(),
 		check('description', 'Description is required').not().isEmpty(),
 		check('price', 'Price is required').not().isEmpty(),
@@ -33,7 +34,7 @@ router.post('/',
 
 router.put('/:id', [
 	validateJWTToken,
-	validateRoles(['ADMIN']),
+	validateRoles([VALID_ROLES.ADMIN]),
 	check('id', 'Invalid id')
 		.isMongoId()
 		.bail()
@@ -48,7 +49,7 @@ router.put('/:id', [
 
 router.delete('/:id', [
 	validateJWTToken,
-	validateRoles(['ADMIN']),
+	validateRoles([VALID_ROLES.ADMIN]),
 	check('id', 'Invalid id')
 		.isMongoId()
 		.bail()

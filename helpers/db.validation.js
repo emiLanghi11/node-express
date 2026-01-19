@@ -1,4 +1,5 @@
 const { Role, User, Category, Product } = require('../models');
+const { VALID_COLLECTIONS } = require('../constants/constants');
 
 
 // ROLES
@@ -40,12 +41,13 @@ const productExists = async (id = '') => {
 	}
 }
 
-// SEARCH
-const VALID_COLLECTIONS = [
-	'categories',
-	'products',
-	'users',
-];
+// FILES
+const validCollections = (collection = '', validCollections = []) => {
+	if(!validCollections.includes(collection)){
+		throw new Error(`Collection ${collection} is not valid. Valid collections: ${validCollections.join(', ')}`);
+	}
+	return true;
+}
 
 module.exports = {
 	roleExists,
@@ -53,5 +55,5 @@ module.exports = {
 	userExists,
 	categoryExists,
 	productExists,
-	VALID_COLLECTIONS
+	validCollections,
 }

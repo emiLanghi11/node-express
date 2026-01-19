@@ -1,24 +1,22 @@
-const { VALID_COLLECTIONS } = require('../helpers/db.validation');
+const { VALID_COLLECTIONS } = require('../constants/constants');
 const { Category, Product, User } = require('../models');
+const { validCollections } = require('../helpers/db.validation');
 
 
 const search = async (req, res) => {
 	try {
 		const { collection, term } = req.params;
-		if (!VALID_COLLECTIONS.includes(collection)) {
-			return res.status(400).json({ message: `Invalid collection for search: ${collection}` });
-		}
-		
+		validCollections(collection, Object.values(VALID_COLLECTIONS));
 		
 		let data = [];
 		switch (collection) {
-			case 'categories':
+			case VALID_COLLECTIONS.CATEGORIES:
 				data = await Category.find({ name: { $regex: term, $options: 'i' }, active: true });
 				break;
-			case 'products':
+			case VALID_COLLECTIONS.PRODUCTS:
 				data = await Product.find({ $or: [{ name: { $regex: term, $options: 'i' } }, { description: { $regex: term, $options: 'i' } }], active: true });
 				break;
-			case 'users':
+			case VALID_COLLECTIONS.USERS:
 				data = await User.find({ $or: [{ name: { $regex: term, $options: 'i' } }, { email: { $regex: term, $options: 'i' } }], active: true });
 				break;
 			default:

@@ -3,15 +3,15 @@ const { check } = require('express-validator');
 const { getUsers, putUsers, postUsers, deleteUsers, patchUsers } = require('../controllers/user.controller');
 const { validateRequestErrors, validateJWTToken, validateRoles } = require('../middlewares');
 const { roleExists, userExists } = require('../helpers/db.validation');
+const { VALID_ROLES } = require('../constants/constants');
 const router = Router();
 
 
-router.get('/', [
-	validateJWTToken,
-	validateRoles(['ADMIN', 'ADMINISTRATIVE', 'SALESPERSON'])
-], getUsers);
+router.get('/', [], getUsers);
 
 router.put('/:id', [
+	validateJWTToken,
+	validateRoles([VALID_ROLES.ADMIN]),
 	check('id', 'Invalid ID')
 		.isMongoId()
 		.bail()
@@ -20,6 +20,8 @@ router.put('/:id', [
 ], putUsers);
 
 router.post('/', [
+	validateJWTToken,
+	validateRoles([VALID_ROLES.ADMIN]),
 	check('email', 'Email is invalid').isEmail(),
 	check('name', 'Name is required').not().isEmpty(),
 	check('password', 'Password is required').not().isEmpty(),
@@ -31,6 +33,8 @@ router.post('/', [
 postUsers);
 
 router.delete('/:id', [
+	validateJWTToken,
+	validateRoles([VALID_ROLES.ADMIN]),
 	check('id', 'Invalid ID')
 		.isMongoId()
 		.bail()

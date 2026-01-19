@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const { dbConnection } = require('../database/config');
 const { validateRequestErrors } = require('../middlewares/request.middleware');
-const { userRoute, authRoute, categoryRoute, productRoute, searchRoute } = require('../routes');
+const { userRoute, authRoute, categoryRoute, productRoute, searchRoute, fileRoute } = require('../routes');
+const fileUpload = require('express-fileupload');
 
 
 class Server {
@@ -17,6 +18,7 @@ class Server {
 			category: process.env.API_CATEGORIES,
 			product: process.env.API_PRODUCTS,
 			search: process.env.API_SEARCH,
+			file: process.env.API_FILES,
 		}
 
 		this.databaseConnection();
@@ -45,6 +47,12 @@ class Server {
 		this.app.use(express.json());
 		// Validate request errors
 		this.app.use(validateRequestErrors);
+		// Upload file
+		this.app.use(fileUpload({
+			useTempFiles: true,
+			tempFileDir: '/tmp/',
+			createParentPath: true,
+		}));
 	}
 
 	routes() {
@@ -53,6 +61,7 @@ class Server {
 		this.app.use(this.paths.category, categoryRoute);
 		this.app.use(this.paths.product, productRoute);
 		this.app.use(this.paths.search, searchRoute);
+		this.app.use(this.paths.file, fileRoute);
 	};
 
 	listen() {
