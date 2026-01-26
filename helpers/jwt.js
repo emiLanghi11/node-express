@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { User } = require('../models');
 
 
 const generateJWT = async (id = '') => {
@@ -30,7 +31,27 @@ const validateJWT = async (token = '') => {
 	});
 }
 
+const validateSocketJWT = async (token = '') => {
+	try {
+		if (!token || token.length <= 10) {
+			throw new Error('No token provided');
+		}
+
+		const decoded = await validateJWT(token);
+		const user = await User.findById(decoded.id);
+		if (!user) {
+			return null;
+		}
+
+		return user;
+	} catch (error) {
+		console.log('error validating socket JWT', error);
+		throw new Error('Error validating socket JWT');
+	}
+}
+
 module.exports = {
 	generateJWT,
-	validateJWT
+	validateJWT,
+	validateSocketJWT
 }

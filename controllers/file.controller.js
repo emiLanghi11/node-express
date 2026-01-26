@@ -59,10 +59,6 @@ const updateImage = async (req, res) => {
 		if(record.img){
 			const publicId = record.img.split('/').pop().split('.')[0];
 			await cloudinary.uploader.destroy(publicId);
-			// const pathImage = path.join(__dirname, '../uploads/', 'images', record.img);
-			// if(fs.existsSync(pathImage)){
-			// 	fs.unlinkSync(pathImage);
-			// }
 		}
 
 		const result = await cloudinary.uploader.upload(req.files.file.tempFilePath);

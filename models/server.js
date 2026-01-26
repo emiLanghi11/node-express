@@ -4,7 +4,8 @@ const { dbConnection } = require('../database/config');
 const { validateRequestErrors } = require('../middlewares/request.middleware');
 const { userRoute, authRoute, categoryRoute, productRoute, searchRoute, fileRoute } = require('../routes');
 const fileUpload = require('express-fileupload');
-
+const http = require('http');
+const socketHandler = require('../sockets/socket.handler');
 
 class Server {
 
@@ -19,11 +20,14 @@ class Server {
 			product: process.env.API_PRODUCTS,
 			search: process.env.API_SEARCH,
 			file: process.env.API_FILES,
-		}
+		};
+		this.server= http.createServer(this.app);
+		this.io = require('socket.io')(this.server);
 
 		this.databaseConnection();
 		this.middlewares();
 		this.routes();
+		this.socketEvents();
 	}
 
 	async databaseConnection() {
@@ -64,9 +68,16 @@ class Server {
 		this.app.use(this.paths.file, fileRoute);
 	};
 
+	socketEvents() {
+		this.io.on('connection', (socket) => socketHandler(socket, this.io));
+	}
+
 	listen() {
-		this.app.listen(this.port, () => {
-			console.log(`Server is running on port ${this.port}`);
+		// this.app.listen(this.port, () => {
+		// 	console.log(`Server is running on port ${this.port}`);
+		// });
+		this.server.listen(this.port, () => {
+			console.log(`Socket.io is running on port ${this.port}`);
 		});
 	}
 }

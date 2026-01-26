@@ -80,7 +80,18 @@ const googleSignIn = async (req, res) => {
 	}
 };
 
+
+const renewToken = async (req, res) => {
+	const user = req.user;
+	const token = await generateJWT(user.id);
+	return res.status(200).json({
+		user,
+		token
+	});
+};
+
 module.exports = {
 	login,
-	googleSignIn
+	googleSignIn,
+	renewToken
 };
