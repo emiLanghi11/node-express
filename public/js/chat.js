@@ -8,7 +8,6 @@ const url = window.location.hostname.includes('localhost')
 	? 'http://localhost:8080'
 	: 'https://node-express-production-a816.up.railway.app';
 
-let user = null;
 let socket = null;
 
 const validateJWTToken = async () => {
@@ -27,7 +26,6 @@ const validateJWTToken = async () => {
 		.then(data => {
 			localStorage.setItem('token', data.token);
 			document.title = `Chat - ${localStorage.getItem('email')}`;
-			user = data.user;
 			connectSocket();
 		})
 	} catch (error) {

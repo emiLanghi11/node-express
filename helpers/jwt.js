@@ -46,7 +46,7 @@ const validateSocketJWT = async (token = '') => {
 		return user;
 	} catch (error) {
 		console.log('error validating socket JWT', error);
-		throw new Error('Error validating socket JWT');
+		throw new Error('Error validating socket JWT', { cause: error });
 	}
 }
 

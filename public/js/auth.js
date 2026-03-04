@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 });
 
-function googleLogin(response) {
+window.googleLogin = function googleLogin(response) {
 	try {
 		const url = window.location.hostname.includes('localhost')
 			? 'http://localhost:8080/api/auth/google'
@@ -70,9 +70,9 @@ function googleLogin(response) {
 	}
 }
 
-function signOut() {
+window.signOut = function signOut() {
 	google.accounts.id.disableAutoSelect();
-	google.accounts.id.revoke(localStorage.getItem('email'), done => {
+	google.accounts.id.revoke(localStorage.getItem('email'), _done => {
 		localStorage.clear();
 		location.reload();
 	});

@@ -2,11 +2,12 @@ import js from "@eslint/js";
 import globals from "globals";
 
 export default [
+  { ignores: ["eslint.config.mjs"] },
   js.configs.recommended,
   {
     ignores: ["public/js/**"],
     rules: {
-      "no-unused-vars": "warn",
+      "no-unused-vars": ["warn", { "ignoreRestSiblings": true }],
       "no-undef": "error",
     },
     languageOptions: {
@@ -18,7 +19,7 @@ export default [
   {
     files: ["public/js/**/*.js"],
     rules: {
-      "no-unused-vars": "warn",
+      "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
       "no-undef": "error",
     },
     languageOptions: {
