@@ -1,0 +1,20 @@
+name: CI
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Hello world
+      run: echo "Hello, world!"
+    - name: Tell me the date
+      run: date
+    - name: Show me the current directory
+      run: ls -la
