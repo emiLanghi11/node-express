@@ -1,5 +1,4 @@
 const { Role, User, Category, Product } = require('../models');
-const { VALID_COLLECTIONS } = require('../constants/constants');
 
 
 // ROLES
@@ -42,9 +41,9 @@ const productExists = async (id = '') => {
 }
 
 // FILES
-const validCollections = (collection = '', validCollections = []) => {
-	if(!validCollections.includes(collection)){
-		throw new Error(`Collection ${collection} is not valid. Valid collections: ${validCollections.join(', ')}`);
+const validCollections = (collection = '', validList = []) => {
+	if(!validList.includes(collection)){
+		throw new Error(`Collection ${collection} is not valid. Valid collections: ${validList.join(', ')}`);
 	}
 	return true;
 }

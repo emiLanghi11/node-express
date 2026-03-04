@@ -1,4 +1,3 @@
-const { Socket } = require('socket.io');
 const { validateSocketJWT } = require('../helpers');
 const { ChatMessages } = require('../models');
 

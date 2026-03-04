@@ -2,7 +2,6 @@ const txtID = document.getElementById('txtID');
 const txtMessage = document.getElementById('txtMessage');
 const ulUsers = document.getElementById('ulUsers');
 const ulMessages = document.getElementById('ulMessages');
-const btnExit = document.getElementById('btnExit');
 
 
 const url = window.location.hostname.includes('localhost')
