@@ -1,5 +1,3 @@
-process.env.JWT_SECRET = 'test-jwt-secret';
-
 const { generateJWT, validateJWT } = require('../../helpers/jwt');
 
 describe('generateJWT', () => {
