@@ -21,11 +21,7 @@ jobs:
       run: npm install
     - name: lint the project
       run: npm run lint
+    - name: Run tests
+      run: npm test
     - name: Build the project
       run: npm run build
-    - name: Hello world
-      run: echo "Hello, world!"
-    - name: Tell me the date
-      run: date
-    - name: Show me the current directory
-      run: ls -la

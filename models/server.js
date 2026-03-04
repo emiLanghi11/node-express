@@ -9,7 +9,7 @@ const socketHandler = require('../sockets/socket.handler');
 
 class Server {
 
-	constructor() {
+	constructor(options = {}) {
 		this.app = express();
 
 		this.port = process.env.PORT || 8080;
@@ -24,7 +24,9 @@ class Server {
 		this.server= http.createServer(this.app);
 		this.io = require('socket.io')(this.server);
 
-		this.databaseConnection();
+		if (!options.skipDbConnection) {
+			this.databaseConnection();
+		}
 		this.middlewares();
 		this.routes();
 		this.socketEvents();
